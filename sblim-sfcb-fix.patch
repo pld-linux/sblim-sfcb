@@ -1,0 +1,22 @@
+--- sblim-sfcb-1.3.15/sqlStatement.h.orig	2010-04-14 00:56:07.000000000 +0200
++++ sblim-sfcb-1.3.15/sqlStatement.h	2012-07-02 17:36:01.243897252 +0200
+@@ -344,7 +344,7 @@
+ UpdIns* newUpdIns(const char* tname, UtilList* colList,UtilList* assignmentList,UtilList* where);
+ Insert* newInsert(const char* tname);
+ ClassDef* newClassDef(int fieldCount, const char * className, UtilList * fieldNameList, int fNameLength, const char * superclass);
+-Call* newCall(char * tname, char * pname, UtilList * klist, UtilList * pList);
++Call* newCall(const char * tname, const char * pname, UtilList * klist, UtilList * pList);
+ 
+ 
+ 
+--- sblim-sfcb-1.3.15/sqlStatement.c.orig	2011-12-01 00:24:18.000000000 +0100
++++ sblim-sfcb-1.3.15/sqlStatement.c	2012-07-02 17:39:30.290555146 +0200
+@@ -1729,7 +1729,7 @@
+             sl = d.value.sint64;
+             break;
+ 	 default:
+-	    ul = 0; 
++	    sl = 0; 
+ 	    break;
+          }
+          sprintf(sp,"%lld", sl);
