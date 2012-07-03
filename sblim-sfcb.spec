@@ -1,3 +1,4 @@
+# TODO: PLDify init script
 Summary:	Small Footprint CIM Broker
 Summary(pl.UTF-8):	Lekki broker CIM
 Name:		sblim-sfcb
@@ -15,6 +16,7 @@ BuildRequires:	openslp-devel
 BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pam-devel
 Requires(post):	openssl-tools
+Provides:	cimserver
 Suggests:	sblim-sfcb-schema
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -35,6 +37,17 @@ well on a regular Linux/Unix system and supports most of the functions
 required by CIM clients to manage such the system. 
 
 %description -l pl.UTF-8
+sfcb to lekki demon CIM (CIMOM), odpowiadający na zapytania klientów
+CIM dotyczące zarządzania systemem i/lub wykonujący zadania związane z
+zarządzaniem systemem. sfcb obsługuje większość ze standardowego XML-a
+CIM z użyciem protokołu HTTP/HTTPS. Jest wysoce modularny, umożliwia
+łatwe dodawanie, usuwanie lub dostosowywanie funkcjonalności do
+różnych zastosowań. sfcb jest przeznaczony zwłaszcza do małych
+systemów wbudowanych, nie mających wystarczająco dużo mocy procesora,
+pamięci czy zasobów dyskowych do obsługi pełnego CIMOM. Oznacza to, że
+sfcb działa bardzo dobrze na zwykłych systemach Linux/Unix i obsługuje
+większość funkcji wymaganych przez klientów CIM do zarządzania takimi
+systemami.
 
 %prep
 %setup -q
