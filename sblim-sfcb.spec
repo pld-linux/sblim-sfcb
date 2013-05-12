@@ -3,12 +3,13 @@ Summary:	Small Footprint CIM Broker
 Summary(pl.UTF-8):	Lekki broker CIM
 Name:		sblim-sfcb
 Version:	1.3.15
-Release:	1
+Release:	2
 License:	Eclipse Public License v1.0
 Group:		Libraries
 Source0:	http://downloads.sourceforge.net/sblim/%{name}-%{version}.tar.bz2
 # Source0-md5:	117e50f989370376876163e621a59f73
 Patch0:		%{name}-fix.patch
+Patch1:		am.patch
 URL:		http://sblim.sourceforge.net/
 BuildRequires:	curl-devel >= 7.11.1
 BuildRequires:	libstdc++-devel
@@ -52,8 +53,21 @@ systemami.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__autoheader}
+%{__automake}
+cd mofc
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__autoheader}
+%{__automake}
+cd ..
 %configure \
 	--disable-debug \
 	--enable-ipv6 \
@@ -63,7 +77,7 @@ systemami.
 	--enable-uds
 #	--enable-jdbc is broken (sfcSqlparse undefined)
 
-%{__make}
+%{__make} -j1
 
 %install
 rm -rf $RPM_BUILD_ROOT
