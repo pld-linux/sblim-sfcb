@@ -55,6 +55,7 @@ systemami.
 
 %build
 %configure \
+	--disable-debug \
 	--enable-ipv6 \
 	--enable-pam \
 	--enable-slp \
