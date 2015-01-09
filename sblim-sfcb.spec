@@ -2,12 +2,12 @@
 Summary:	Small Footprint CIM Broker
 Summary(pl.UTF-8):	Lekki broker CIM
 Name:		sblim-sfcb
-Version:	1.3.15
-Release:	2
+Version:	1.4.9
+Release:	1
 License:	Eclipse Public License v1.0
 Group:		Libraries
 Source0:	http://downloads.sourceforge.net/sblim/%{name}-%{version}.tar.bz2
-# Source0-md5:	117e50f989370376876163e621a59f73
+# Source0-md5:	28021cdabc73690a94f4f9d57254ce30
 Patch0:		%{name}-fix.patch
 Patch1:		am.patch
 URL:		http://sblim.sourceforge.net/
@@ -16,14 +16,20 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	openslp-devel
 BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pam-devel
+BuildRequires:	rpmbuild(macros) >= 1.644
+BuildRequires:	sblim-cmpi-devel
+BuildRequires:	sblim-sfcCommon-devel >= 1.0.1
+BuildRequires:	unzip
+BuildRequires:	zlib-devel
 Requires(post):	openssl-tools
+Requires:	sblim-sfcCommon >= 1.0.1
 Provides:	cimserver
 Suggests:	sblim-sfcb-schema
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-# undefined newList in libsfcUtil: circular dependencies with libsfcBrokerCore
-# undefined trimws in libsfcCimXmlCodec: symbols expected to be defined in binary
-%define		skip_post_check_so	libsfcUtil\.so.* libsfcCimXmlCodec\.so.*
+# libsfcCimXmlCodec needs trimws symbol exported from broker binary
+# libsfcHttpAdapter needs fallback_ipv4 symbol exported from broker binary
+%define		skip_post_check_so	libsfcCimXmlCodec\.so.* libsfcHttpAdapter\.so.*
 
 %description
 sfcb is a lightweight CIM daemon (aka CIMOM) that responds to CIM
@@ -69,27 +75,30 @@ cd mofc
 %{__automake}
 cd ..
 %configure \
+	SYSTEMDDIR=%{systemdunitdir} \
 	--disable-debug \
-	--enable-ipv6 \
 	--enable-pam \
 	--enable-slp \
 	--enable-ssl \
 	--enable-uds
-#	--enable-jdbc is broken (sfcSqlparse undefined)
 
 %{__make} -j1
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{systemdunitdir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	initdir=/etc/rc.d/init.d
 
 # libraries with no headers installed
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/sfcb/libsfc{BrokerCore,CimXmlCodec,FileRepository,HttpAdapter,InternalProvider,Util}.so
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/sfcb/libsfc{BrokerCore,CimXmlCodec,FileRepository,HttpAdapter,InternalProvider}.so
 # the same or dlopened modules
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/sfcb/*.la
+
+# packaged as %doc
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/sfcb-%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -110,6 +119,7 @@ fi
 %attr(755,root,root) %{_bindir}/wbemcat
 %attr(755,root,root) %{_bindir}/xmltest
 %attr(755,root,root) %{_sbindir}/sfcbd
+%{systemdunitdir}/sblim-sfcb.service
 %dir %{_libdir}/sfcb
 # libs
 %attr(755,root,root) %{_libdir}/sfcb/libsfcBrokerCore.so.*.*.*
@@ -122,8 +132,6 @@ fi
 %attr(755,root,root) %{_libdir}/sfcb/libsfcHttpAdapter.so.0
 %attr(755,root,root) %{_libdir}/sfcb/libsfcInternalProvider.so.*.*.*
 %attr(755,root,root) %{_libdir}/sfcb/libsfcInternalProvider.so.0
-%attr(755,root,root) %{_libdir}/sfcb/libsfcUtil.so.*.*.*
-%attr(755,root,root) %{_libdir}/sfcb/libsfcUtil.so.0
 # providers dlopened by libsfcBrokerCore
 %attr(755,root,root) %{_libdir}/sfcb/libsfcBasicAuthentication.so*
 %attr(755,root,root) %{_libdir}/sfcb/libsfcBasicPAMAuthentication.so*
