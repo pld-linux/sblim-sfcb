@@ -3,7 +3,7 @@ Summary:	Small Footprint CIM Broker
 Summary(pl.UTF-8):	Lekki broker CIM
 Name:		sblim-sfcb
 Version:	1.4.9
-Release:	1
+Release:	2
 License:	Eclipse Public License v1.0
 Group:		Libraries
 Source0:	http://downloads.sourceforge.net/sblim/%{name}-%{version}.tar.bz2
@@ -86,7 +86,7 @@ cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{systemdunitdir}
+install -d $RPM_BUILD_ROOT{%{systemdunitdir},%{_libdir}/cmpi}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -120,6 +120,7 @@ fi
 %attr(755,root,root) %{_bindir}/xmltest
 %attr(755,root,root) %{_sbindir}/sfcbd
 %{systemdunitdir}/sblim-sfcb.service
+%dir %{_libdir}/cmpi
 %dir %{_libdir}/sfcb
 # libs
 %attr(755,root,root) %{_libdir}/sfcb/libsfcBrokerCore.so.*.*.*
