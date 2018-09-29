@@ -10,6 +10,7 @@ Source0:	http://downloads.sourceforge.net/sblim/%{name}-%{version}.tar.bz2
 # Source0-md5:	28021cdabc73690a94f4f9d57254ce30
 Patch0:		%{name}-fix.patch
 Patch1:		am.patch
+Patch2:		%{name}-dont-inline.patch
 URL:		http://sblim.sourceforge.net/
 BuildRequires:	curl-devel >= 7.11.1
 BuildRequires:	libstdc++-devel
@@ -60,6 +61,7 @@ systemami.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__libtoolize}
