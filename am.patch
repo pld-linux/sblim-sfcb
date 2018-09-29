@@ -21,3 +21,13 @@
  if test "$enable_debug" == "yes"; then
     SFCB_CPPFLAGS="-D SFCB_DEBUG $SFCB_CPPFLAGS"
  fi
+--- sblim-sfcb-1.4.9/Makefile.am~	2014-11-25 02:43:09.000000000 +0100
++++ sblim-sfcb-1.4.9/Makefile.am	2018-09-29 23:14:32.399688330 +0200
+@@ -360,6 +360,7 @@
+ 
+ sfcbinst2mof_SOURCES=sfcbinst2mof.c
+ sfcbinst2mof_LDADD = -lsfcFileRepository -lsfcBrokerCore
++sfcbinst2mof_DEPENDENCIES=libsfcFileRepository.la libsfcBrokerCore.la
+ 
+ sfcbtrace_SOURCES=sfcbtrace.c
+ sfcbtrace_LDADD = -lsfcBrokerCore
