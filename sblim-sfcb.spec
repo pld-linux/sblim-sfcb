@@ -3,7 +3,7 @@ Summary:	Small Footprint CIM Broker
 Summary(pl.UTF-8):	Lekki broker CIM
 Name:		sblim-sfcb
 Version:	1.4.9
-Release:	3
+Release:	4
 License:	Eclipse Public License v1.0
 Group:		Libraries
 Source0:	http://downloads.sourceforge.net/sblim/%{name}-%{version}.tar.bz2
