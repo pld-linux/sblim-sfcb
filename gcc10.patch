@@ -1,0 +1,92 @@
+diff -ur sblim-sfcb-1.4.9/control.c sblim-sfcb-1.4.9-gcc10/control.c
+--- sblim-sfcb-1.4.9/control.c	2021-10-13 21:37:49.873825576 +0200
++++ sblim-sfcb-1.4.9-gcc10/control.c	2021-10-13 21:36:53.004046593 +0200
+@@ -79,6 +79,7 @@
+ int             httpProcIdX;
+ long            httpReqHandlerTimeout;
+  
++const char      * sfcBrokerStart;
+ /**
+  * Kindly null terminate, always, even if might overwrite
+  * the last char of the truncated string. 
+diff -ur sblim-sfcb-1.4.9/control.h sblim-sfcb-1.4.9-gcc10/control.h
+--- sblim-sfcb-1.4.9/control.h	2014-11-25 02:43:10.000000000 +0100
++++ sblim-sfcb-1.4.9-gcc10/control.h	2021-10-13 21:36:42.564087988 +0200
+@@ -28,7 +28,7 @@
+ int             getControlULong(char *id, unsigned long *val);
+ int             getControlNum(char *id, long *val);
+ int             getControlBool(char *id, int *val);
+-const char      * sfcBrokerStart;
++extern const char      * sfcBrokerStart;
+ 
+ #endif
+ /* MODELINES */
+diff -ur sblim-sfcb-1.4.9/default.reg sblim-sfcb-1.4.9-gcc10/default.reg
+--- sblim-sfcb-1.4.9/default.reg	2014-11-25 03:06:53.000000000 +0100
++++ sblim-sfcb-1.4.9-gcc10/default.reg	2021-10-13 21:37:07.817321652 +0200
+@@ -20,12 +20,12 @@
+    unload: never
+    namespace: root/interop
+ #
+-#[$ProfileProvider$]
+-#   provider: ProfileProvider
+-#   location: sfcProfileProvider
+-#   type: method
+-#   unload: never
+-#   namespace: root/interop
++[$ProfileProvider$]
++   provider: ProfileProvider
++   location: sfcProfileProvider
++   type: method
++   unload: never
++   namespace: root/interop
+ #
+ [$QualifierProvider$]
+    provider: QualifierProvider
+diff -ur sblim-sfcb-1.4.9/providerMgr.c sblim-sfcb-1.4.9-gcc10/providerMgr.c
+--- sblim-sfcb-1.4.9/providerMgr.c	2014-11-25 02:43:12.000000000 +0100
++++ sblim-sfcb-1.4.9-gcc10/providerMgr.c	2021-10-13 21:35:30.974379261 +0200
+@@ -53,6 +53,8 @@
+ #define SFCB_ASM(x)
+ #endif
+ 
++sigset_t mask, old_mask;
++
+ static pthread_mutex_t resultsocketMutex = PTHREAD_MUTEX_INITIALIZER;
+ 
+ extern CMPIBroker *Broker;
+diff -ur sblim-sfcb-1.4.9/providerMgr.h sblim-sfcb-1.4.9-gcc10/providerMgr.h
+--- sblim-sfcb-1.4.9/providerMgr.h	2014-11-25 02:43:12.000000000 +0100
++++ sblim-sfcb-1.4.9-gcc10/providerMgr.h	2021-10-13 21:34:41.104590547 +0200
+@@ -398,7 +398,7 @@
+ BinResponseHdr *invokeProvider(BinRequestContext * ctx);
+ void            freeResponseHeaders(BinResponseHdr ** resp,
+                                     BinRequestContext * ctx);
+-sigset_t mask, old_mask;
++extern sigset_t mask, old_mask;
+ 
+ #endif
+ /* MODELINES */
+diff -ur sblim-sfcb-1.4.9/trace.c sblim-sfcb-1.4.9-gcc10/trace.c
+--- sblim-sfcb-1.4.9/trace.c	2014-11-25 02:43:17.000000000 +0100
++++ sblim-sfcb-1.4.9-gcc10/trace.c	2021-10-13 21:33:31.551564675 +0200
+@@ -52,6 +52,7 @@
+ int             providerProcess = 0;
+ int             idleThreadId = 0;
+ int             terminating = 0;
++int             colorTrace;
+ 
+ int             _sfcb_debug = 0;
+ unsigned long   _sfcb_trace_mask = 0;
+diff -ur sblim-sfcb-1.4.9/trace.h sblim-sfcb-1.4.9-gcc10/trace.h
+--- sblim-sfcb-1.4.9/trace.h	2021-10-13 21:37:49.873825576 +0200
++++ sblim-sfcb-1.4.9-gcc10/trace.h	2021-10-13 21:33:28.871576855 +0200
+@@ -131,7 +131,7 @@
+ #define CYAN            6
+ #define WHITE           7
+ void            changeTextColor(int reset);
+-int             colorTrace;
++extern int             colorTrace;
+ 
+ #define MAX_MSG_SIZE 1024       /* max length of trace message */
+ 

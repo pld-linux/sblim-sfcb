@@ -3,7 +3,7 @@ Summary:	Small Footprint CIM Broker
 Summary(pl.UTF-8):	Lekki broker CIM
 Name:		sblim-sfcb
 Version:	1.4.9
-Release:	4
+Release:	5
 License:	Eclipse Public License v1.0
 Group:		Libraries
 Source0:	http://downloads.sourceforge.net/sblim/%{name}-%{version}.tar.bz2
@@ -11,6 +11,7 @@ Source0:	http://downloads.sourceforge.net/sblim/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-fix.patch
 Patch1:		am.patch
 Patch2:		%{name}-dont-inline.patch
+Patch3:		gcc10.patch
 URL:		http://sblim.sourceforge.net/
 BuildRequires:	curl-devel >= 7.11.1
 BuildRequires:	libstdc++-devel
@@ -62,6 +63,7 @@ systemami.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__libtoolize}
@@ -163,7 +165,7 @@ fi
 %dir /var/lib/sfcb/stage
 %config %verify(not md5 mtime size) /var/lib/sfcb/stage/default.reg
 %dir /var/lib/sfcb/stage/mofs
-%config %verify(not md5 mtime size) %dir /var/lib/sfcb/stage/mofs/indication.mof
+%config %verify(not md5 mtime size) /var/lib/sfcb/stage/mofs/indication.mof
 %dir /var/lib/sfcb/stage/mofs/root
 %dir /var/lib/sfcb/stage/mofs/root/interop
 %config %verify(not md5 mtime size) /var/lib/sfcb/stage/mofs/root/interop/*.mof
